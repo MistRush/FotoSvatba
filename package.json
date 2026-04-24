@@ -1,0 +1,14 @@
+{
+  "name": "svatba-foto",
+  "version": "1.0.0",
+  "description": "Svatební sdílení fotek – hosté nahrávají fotky do společné galerie",
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "echo 'Static site, no build needed'"
+  },
+  "dependencies": {
+    "googleapis": "^144.0.0",
+    "busboy": "^1.6.0"
+  },
+  "devDependencies": {}
+}

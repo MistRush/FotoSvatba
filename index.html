@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Svatební Fotky – Sdílejte své okamžiky</title>
+    <meta name="description" content="Nahrajte a sdílejte fotky ze svatby. Všechny vzpomínky na jednom místě.">
+    <meta name="theme-color" content="#1a1a2e">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Image compression library -->
+    <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Decorative elements -->
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero" id="hero">
+        <div class="hero-content">
+            <div class="monogram">
+                <span class="monogram-ampersand">&</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="name name-1">Jméno</span>
+                <span class="amp">&</span>
+                <span class="name name-2">Jméno</span>
+            </h1>
+            <p class="hero-subtitle">Sdílejte své okamžiky z našeho velkého dne</p>
+            <div class="hero-date">
+                <div class="date-line"></div>
+                <span class="date-text">2026</span>
+                <div class="date-line"></div>
+            </div>
+        </div>
+        <div class="scroll-indicator" id="scrollIndicator">
+            <span>Nahrát fotky</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Upload Section -->
+    <main class="upload-section" id="upload">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Nahrát fotky</h2>
+                <p class="section-desc">Vyberte fotky z vašeho telefonu – můžete jich nahrát více najednou</p>
+            </div>
+
+            <!-- Guest Name -->
+            <div class="guest-input-wrapper">
+                <label for="guestName" class="guest-label">Vaše jméno <span class="optional">(volitelné)</span></label>
+                <input type="text" id="guestName" class="guest-input" placeholder="např. Jan Novák" autocomplete="name">
+            </div>
+
+            <!-- Upload Area -->
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*" multiple capture="environment" hidden>
+                <div class="upload-icon">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <rect x="8" y="16" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2.5"/>
+                        <circle cx="24" cy="32" r="5" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 44l12-12 8 8 12-16 16 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M32 8v12M26 14l6-6 6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <p class="upload-text">Klepněte pro výběr fotek</p>
+                <p class="upload-subtext">nebo přetáhněte fotky sem</p>
+                <button class="upload-btn" id="uploadBtn" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    Vybrat fotky
+                </button>
+            </div>
+
+            <!-- Upload Preview & Progress -->
+            <div class="upload-preview" id="uploadPreview" hidden>
+                <div class="preview-header">
+                    <h3 class="preview-title">Připraveno k nahrání</h3>
+                    <button class="preview-clear" id="clearBtn" type="button">Zrušit vše</button>
+                </div>
+                <div class="preview-grid" id="previewGrid"></div>
+                <div class="upload-actions">
+                    <div class="upload-info" id="uploadInfo">
+                        <span id="fileCount">0</span> fotek připraveno
+                    </div>
+                    <button class="submit-btn" id="submitBtn" type="button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        Nahrát fotky
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Progress -->
+            <div class="progress-section" id="progressSection" hidden>
+                <div class="progress-header">
+                    <span class="progress-label" id="progressLabel">Nahrávám...</span>
+                    <span class="progress-count" id="progressCount">0/0</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-status" id="progressStatus">Komprese fotek...</div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage" hidden>
+                <div class="success-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <h3 class="success-title">Fotky nahrány!</h3>
+                <p class="success-text">Děkujeme za sdílení vašich okamžiků ❤️</p>
+                <button class="upload-more-btn" id="uploadMoreBtn" type="button">Nahrát další fotky</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section" id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Galerie</h2>
+                <p class="section-desc">Fotky od všech svatebčanů</p>
+                <button class="refresh-btn" id="refreshBtn" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+                    </svg>
+                    Obnovit
+                </button>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <div class="gallery-loading" id="galleryLoading">
+                    <div class="spinner"></div>
+                    <p>Načítám fotky...</p>
+                </div>
+            </div>
+            <div class="gallery-empty" id="galleryEmpty" hidden>
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <p>Zatím žádné fotky. Buďte první!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" hidden>
+        <button class="lightbox-close" id="lightboxClose" type="button">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"/>
+            </svg>
+        </button>
+        <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+            </svg>
+        </button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="Fotka ze svatby">
+        </div>
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>S láskou sdíleno ❤️</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
