@@ -4,10 +4,26 @@ const { google } = require('googleapis');
  * Get authenticated Google Drive client using service account credentials
  */
 function getDriveClient() {
+    let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
+    
+    // Handle different formats of private key from env vars
+    // Could be: literal \n strings, real newlines, or JSON-escaped
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+        privateKey = JSON.parse(privateKey);
+    }
+    privateKey = privateKey.replace(/\\n/g, '\n');
+    
+    console.log('Auth config:', {
+        hasEmail: !!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        hasKey: !!privateKey,
+        keyLength: privateKey.length,
+        hasFolderId: !!process.env.GOOGLE_DRIVE_FOLDER_ID,
+    });
+    
     const auth = new google.auth.GoogleAuth({
         credentials: {
             client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-            private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+            private_key: privateKey,
         },
         scopes: ['https://www.googleapis.com/auth/drive.file'],
     });
