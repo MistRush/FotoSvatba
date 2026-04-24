@@ -67,7 +67,8 @@ exports.handler = async (event) => {
         const driveFileName = `${safeName}_${timestamp}.${ext}`;
 
         // Upload to Google Drive
-        const drive = getDriveClient('https://www.googleapis.com/auth/drive.file');
+        // Use full drive scope - service accounts need it for shared folders
+        const drive = getDriveClient('https://www.googleapis.com/auth/drive');
         const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
         const { Readable } = require('stream');
@@ -86,6 +87,7 @@ exports.handler = async (event) => {
                 body: stream,
             },
             fields: 'id, name',
+            supportsAllDrives: true,
         });
 
         return {
