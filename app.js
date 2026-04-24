@@ -8,7 +8,7 @@
 
     // ---------- Config ----------
     const CONFIG = {
-        maxFileSizeMB: 2,
+        maxFileSizeMB: 4,
         maxWidthOrHeight: 2048,
         compressionQuality: 0.8,
         allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'],
