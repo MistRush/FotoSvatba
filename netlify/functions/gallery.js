@@ -1,25 +1,5 @@
 const { google } = require('googleapis');
-
-/**
- * Get authenticated Google Drive client
- */
-function getDriveClient() {
-    let privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
-    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
-        privateKey = JSON.parse(privateKey);
-    }
-    privateKey = privateKey.replace(/\\n/g, '\n');
-    
-    const auth = new google.auth.GoogleAuth({
-        credentials: {
-            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-            private_key: privateKey,
-        },
-        scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-    });
-
-    return google.drive({ version: 'v3', auth });
-}
+const { getDriveClient } = require('./driveAuth');
 
 /**
  * List all photos in the Google Drive folder
@@ -42,7 +22,7 @@ exports.handler = async (event) => {
     }
 
     try {
-        const drive = getDriveClient();
+        const drive = getDriveClient('https://www.googleapis.com/auth/drive.readonly');
         const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
 
         // List all image files in the folder
